@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="fr">
-        <body className={`${supremeLL.className} antialiased`}>
+        <body className={`relative ${supremeLL.className} antialiased mx-5`}>
           <Header />
           {children}
         </body>
