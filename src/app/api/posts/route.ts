@@ -26,12 +26,13 @@ export async function POST(req: Request) {
         id: postId,
         title,
         content,
-        imageUrl,
+        imageUrl: imageUrl || "",
         authorId: user.id,
         tags: {
-          create: Array.isArray(tags)
-            ? tags.map((tag: string) => ({
-                name: tag,
+          connectOrCreate: Array.isArray(tags)
+            ? tags.map((tagName: string) => ({
+                where: { name: tagName.trim() },
+                create: { name: tagName.trim() },
               }))
             : [],
         },
@@ -43,7 +44,16 @@ export async function POST(req: Request) {
 
     return Response.json(post);
   } catch (error) {
-    console.error(error);
-    return new Response("Error creating post", { status: 500 });
+    console.error("Post creation error:", error);
+    return new Response(
+      JSON.stringify({
+        error: "Error creating post",
+        details: error instanceof Error ? error.message : "Unknown error",
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
 }
