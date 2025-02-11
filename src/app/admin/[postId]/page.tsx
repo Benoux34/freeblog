@@ -16,13 +16,15 @@ async function getPost(postId: string) {
 }
 
 export default async function Post({
-  params: { postId },
+  params,
 }: {
-  params: { postId: string };
+  params: Promise<{ post_id: string }>;
 }) {
-  if (!postId) redirect("/");
+  const { post_id } = await params;
 
-  const post = await getPost(postId);
+  if (!post_id) redirect("/");
+
+  const post = await getPost(post_id);
   console.log(post);
 
   return (
@@ -32,7 +34,7 @@ export default async function Post({
       </div>
 
       <div className="w-1/2">
-        <PostForm postId={postId} initialData={post} />
+        <PostForm postId={post_id} />
       </div>
     </main>
   );
